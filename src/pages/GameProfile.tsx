@@ -43,7 +43,6 @@ export default function GameProfile() {
                             data.text().then((text) => {
                                 const json = JSON.parse(text);
                                 const texture = JSON.parse(atob(json.properties[0].value))
-                                console.log(texture)
                                 setProfile({
                                     username: json.name,
                                     uuid: json.id,

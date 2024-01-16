@@ -14,7 +14,7 @@ import LogoutRoundedIcon from '@mui/icons-material/LogoutRounded';
 
 import ColorSchemeToggle from './ColorSchemeToggle';
 import { closeSidebar } from '../utils';
-import { Assessment, Gamepad } from '@mui/icons-material';
+import { Assessment, Gamepad, SettingsApplications } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { Skeleton } from '@mui/joy';
@@ -135,6 +135,18 @@ export default function Sidebar(props: any) {
               </ListItemContent>
             </ListItemButton>
           </ListItem>
+          {
+            user.permission === "超级管理员" ?
+              <ListItem>
+                <ListItemButton onClick={() => { nav("/serverConfig") }} selected={props.selected === "服务器设置"}>
+                  <SettingsApplications />
+                  <ListItemContent>
+                    <Typography level="title-sm">服务器设置</Typography>
+                  </ListItemContent>
+                </ListItemButton>
+              </ListItem>
+              : null
+          }
         </List>
 
         <List

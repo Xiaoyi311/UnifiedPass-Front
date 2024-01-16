@@ -8,6 +8,7 @@ import OverView from './pages/OverView';
 import About from './pages/About';
 import Setting from './pages/Setting';
 import GameProfile from './pages/GameProfile';
+import ServerConfig from './pages/ServerConfig';
 
 const router = createHashRouter([
   {
@@ -37,6 +38,10 @@ const router = createHashRouter([
   {
     path: '/gameProfile',
     element: <GameProfile/>
+  },
+  {
+    path: '/serverConfig',
+    element: <ServerConfig/>
   }
 ]);
 
