@@ -3,12 +3,9 @@ import { useState, useEffect } from "react";
 import Header from "./Header";
 import Sidebar from "./Sidebar";
 import { Home, NavigateNext } from "@mui/icons-material";
-import { useNavigate } from "react-router-dom";
 import NoPermission from "../pages/NoPermission";
 
 export default function PageBase(props: any) {
-  const nav = useNavigate();
-
   const [allow, setAllow] = useState(true);
   const [user, setUser] = useState<{
     username: any,

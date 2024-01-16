@@ -73,9 +73,15 @@ export default function OverView() {
                                 setyggClick(true);
                                 setTimeout(() => setyggClick(false), 1000);
                             }}
+                            onDragStart={(e) => {
+                                const a = "authlib-injector:yggdrasil-server:" + encodeURIComponent(window.location.href.replace("#/overview", "api/yggdrasil/"));
+                                if(e.dataTransfer != null){
+                                    e.dataTransfer.setData("text/plain", a);
+                                    e.dataTransfer.dropEffect = "copy";
+                                }
+                            }}
                             disabled={yggClick}
                             startDecorator={<AdsClick />}
-                            data-clipboard-text={window.location.href.replace("#/overview", "api/yggdrasil/")}
                         >
                             {yggClick ? "已复制 API 地址!" : "点击/拖动此按钮配置 API 地址"}
                         </Button>
