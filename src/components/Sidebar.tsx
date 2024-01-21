@@ -14,7 +14,7 @@ import LogoutRoundedIcon from '@mui/icons-material/LogoutRounded';
 
 import ColorSchemeToggle from './ColorSchemeToggle';
 import { closeSidebar } from '../utils';
-import { Assessment, Gamepad, SettingsApplications } from '@mui/icons-material';
+import { Assessment, Flag, Gamepad } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { Skeleton } from '@mui/joy';
@@ -55,7 +55,7 @@ export default function Sidebar(props: any) {
           md: 'none',
         },
         transition: 'transform 0.4s, width 0.4s',
-        zIndex: 10000,
+        zIndex: 1000,
         height: '100dvh',
         width: 'var(--Sidebar-width)',
         top: 0,
@@ -79,7 +79,7 @@ export default function Sidebar(props: any) {
         className="Sidebar-overlay"
         sx={{
           position: 'fixed',
-          zIndex: 9998,
+          zIndex: 1001,
           top: 0,
           left: 0,
           width: '100vw',
@@ -138,10 +138,10 @@ export default function Sidebar(props: any) {
           {
             user.permission === "超级管理员" ?
               <ListItem>
-                <ListItemButton onClick={() => { nav("/serverConfig") }} selected={props.selected === "服务器设置"}>
-                  <SettingsApplications />
+                <ListItemButton onClick={() => { nav("/capeManage") }} selected={props.selected === "披风管理"}>
+                  <Flag />
                   <ListItemContent>
-                    <Typography level="title-sm">服务器设置</Typography>
+                    <Typography level="title-sm">披风管理</Typography>
                   </ListItemContent>
                 </ListItemButton>
               </ListItem>

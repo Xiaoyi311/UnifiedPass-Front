@@ -8,7 +8,7 @@ import OverView from './pages/OverView';
 import About from './pages/About';
 import Setting from './pages/Setting';
 import GameProfile from './pages/GameProfile';
-import ServerConfig from './pages/ServerConfig';
+import CapeManage from './pages/CapeManage';
 
 const router = createHashRouter([
   {
@@ -40,8 +40,8 @@ const router = createHashRouter([
     element: <GameProfile/>
   },
   {
-    path: '/serverConfig',
-    element: <ServerConfig/>
+    path: '/capeManage',
+    element: <CapeManage/>
   }
 ]);
 

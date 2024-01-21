@@ -1,6 +1,6 @@
-import { Button, Card, CardActions, CardContent, Divider, FormControl, FormHelperText, FormLabel, Grid, Input, Radio, RadioGroup, Stack, Typography, styled } from "@mui/joy";
+import { Button, Card, CardActions, CardContent, Divider, FormControl, FormHelperText, FormLabel, Grid, Input, Option, Radio, RadioGroup, Select, Stack, Typography, styled } from "@mui/joy";
 import PageBase from "../components/PageBase";
-import { BadgeOutlined, PermIdentity, Settings, UploadFile } from "@mui/icons-material";
+import { BadgeOutlined, Flag, PermIdentity, Settings, UploadFile } from "@mui/icons-material";
 import { useEffect, useState } from "react";
 
 export default function GameProfile() {
@@ -16,20 +16,12 @@ export default function GameProfile() {
   width: 1px;
 `;
 
-    interface FormElements extends HTMLFormControlsCollection {
-        username: HTMLInputElement;
-        model: HTMLInputElement;
-        skin: HTMLInputElement;
-    }
-    interface ChangeProfileFormElement extends HTMLFormElement {
-        readonly elements: FormElements;
-    }
-
     const [profile, setProfile] = useState({
         username: "",
         uuid: "",
         model: "",
         skin: "",
+        cape: "",
         skin_src: new File([], "un")
     });
 
@@ -48,7 +40,8 @@ export default function GameProfile() {
                                     uuid: json.id,
                                     model: texture.textures.SKIN === undefined ? "default" : texture.textures.SKIN.metadata.model,
                                     skin: texture.textures.SKIN === undefined ? "" : texture.textures.SKIN.url,
-                                    skin_src: profile.skin_src
+                                    skin_src: profile.skin_src,
+                                    cape: texture.textures.CAPE === undefined ? "" : texture.textures.CAPE.url
                                 })
                                 const show = document.getElementById("skin_show");
                                 if (texture.textures.SKIN !== undefined && show != null) {
@@ -97,14 +90,15 @@ export default function GameProfile() {
                     uuid: profile.uuid,
                     model: profile.model,
                     skin: typeof (reader.result) == "string" ? reader.result : "",
-                    skin_src: file
+                    skin_src: file,
+                    cape: profile.cape
                 })
             }
             img.src = typeof (e.target?.result) == "string" ? e.target?.result : "";
         }
     }
 
-    async function updateProfie(e: React.FormEvent<ChangeProfileFormElement>) {
+    async function updateProfie(e: any) {
         e.preventDefault();
 
         if (profile.skin_src.name !== "un") {
@@ -174,8 +168,15 @@ export default function GameProfile() {
                                         uuid: profile.uuid,
                                         model: profile.model,
                                         skin: profile.skin,
-                                        skin_src: profile.skin_src
+                                        skin_src: profile.skin_src,
+                                        cape: profile.cape
                                     })} value={profile.username} />
+                                </FormControl>
+                                <FormControl sx={{ gridColumn: '1/-1' }} required>
+                                    <FormLabel>游戏披风</FormLabel>
+                                    <Select defaultValue={0} startDecorator={<Flag/>} name="cape">
+                                        <Option value={0}>无披风</Option>
+                                    </Select>
                                 </FormControl>
                                 <FormControl sx={{ gridColumn: '1/-1' }} required>
                                     <FormLabel>游戏皮肤</FormLabel>
@@ -193,7 +194,8 @@ export default function GameProfile() {
                                                 uuid: profile.uuid,
                                                 model: e.target.value,
                                                 skin: profile.skin,
-                                                skin_src: profile.skin_src
+                                                skin_src: profile.skin_src,
+                                                cape: profile.cape
                                             })} defaultValue="default">
                                                 <Radio
                                                     value="default"
@@ -220,6 +222,7 @@ export default function GameProfile() {
                                             </Button>
                                         </Stack>
                                         <img alt="skin" src={profile.skin} style={{ display: "none", imageRendering: "pixelated" }} width="100vw" height="100vh" id="skin_show" />
+                                        <img alt="cape" src={profile.cape} style={{ display: "none", imageRendering: "pixelated" }} width="100vw" height="100vh" id="cape_show" />
                                     </Stack>
                                     <FormHelperText>如果右侧图片长时间未更新请检查浏览器缓存</FormHelperText>
                                 </FormControl>
