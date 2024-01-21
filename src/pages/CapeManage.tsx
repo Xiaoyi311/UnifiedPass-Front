@@ -1,6 +1,6 @@
-import { Button, Card, DialogTitle, Divider, FormControl, FormLabel, Grid, IconButton, Input, Modal, ModalClose, ModalDialog, Option, Select, Stack, Typography, styled } from "@mui/joy";
+import { Button, Card, DialogTitle, Divider, FormControl, FormHelperText, FormLabel, Grid, IconButton, Input, Modal, ModalClose, ModalDialog, Option, Select, Stack, Tooltip, Typography, styled } from "@mui/joy";
 import PageBase from "../components/PageBase";
-import { Add, ArrowLeft, ArrowRight, Edit, Refresh, Remove, UploadFile } from "@mui/icons-material";
+import { Add, ArrowLeft, ArrowRight, BackHand, Edit, FindInPage, Refresh, Remove, Send, UploadFile } from "@mui/icons-material";
 import { useEffect, useState } from "react";
 
 export default function CapeManage() {
@@ -14,6 +14,11 @@ export default function CapeManage() {
         edit: false
     });
 
+    const [delWarn, setDelWarn] = useState("" as any);
+    const [looking, setLooking] = useState("");
+    const [findUser, setFindUser] = useState(false);
+    const [sendCape, setSendCape] = useState("");
+    const [backCape, setBackCape] = useState("");
     const [first, setFirst] = useState(true);
     const [capes, setCapes] = useState<any[]>([]);
     const [page, setPage] = useState({
@@ -33,15 +38,6 @@ export default function CapeManage() {
     width: 1px;
   `;
 
-    interface FormElements extends HTMLFormControlsCollection {
-        name: HTMLInputElement;
-        type: HTMLInputElement;
-        cape: HTMLInputElement;
-    }
-    interface CapeFormElement extends HTMLFormElement {
-        readonly elements: FormElements;
-    }
-
     useEffect(() => {
         if (first) {
             setFirst(false);
@@ -54,6 +50,7 @@ export default function CapeManage() {
             return;
         }
 
+        setLooking("");
         fetch("/api/profile/getCapes?page=" + pagec).then((data) => {
             data.text().then((text) => {
                 const data = JSON.parse(text).data;
@@ -110,7 +107,7 @@ export default function CapeManage() {
         }
     }
 
-    async function aeCape(e: React.FormEvent<CapeFormElement>) {
+    async function aeCape(e: any) {
         e.preventDefault();
         if (cape.cape === "") {
             alert("请指定披风文件!")
@@ -193,9 +190,80 @@ export default function CapeManage() {
         }
     }
 
+    async function sendCapeF(e: any) {
+        e.preventDefault();
+
+        const r = await fetch("/api/profile/sendCape", {
+            body: JSON.stringify({
+                cape: sendCape,
+                user: e.currentTarget.elements.uuid.value
+            }),
+            headers: {
+                "Content-Type": "application/json"
+            },
+            method: "POST"
+        })
+
+
+        if (r.status !== 204) {
+            alert("发放失败! 请检查唯一识别码是否有误或者重复发放!");
+        } else {
+            alert("发放成功!");
+        }
+
+        setSendCape("");
+    }
+
+    async function backCapeF(e: any) {
+        e.preventDefault();
+
+        const r = await fetch("/api/profile/backCape", {
+            body: JSON.stringify({
+                cape: sendCape,
+                user: e.currentTarget.elements.uuid.value
+            }),
+            headers: {
+                "Content-Type": "application/json"
+            },
+            method: "POST"
+        })
+
+
+        if (r.status !== 204) {
+            alert("收回失败! 请检查唯一识别码是否有误或者重复收回!");
+        } else {
+            alert("收回成功!");
+        }
+
+        setSendCape("");
+    }
+
+    async function findUserF(e: any) {
+        e.preventDefault();
+
+        const uuid = e.currentTarget.elements.uuid.value;
+        const r = await fetch("/api/profile/getUserCapes/" + uuid, {
+            headers: {
+                "Content-Type": "application/json"
+            },
+            method: "GET"
+        })
+
+        const data = JSON.parse(await r.text());
+        if (typeof (data.data) !== "object") {
+            alert("查询失败! 请检查唯一识别码是否有误!");
+        } else {
+            setLooking("角色 " + uuid);
+            setCapes(data.data);
+            alert("查询成功! 点击上方刷新数据恢复显示!");
+        }
+
+        setFindUser(false);
+    }
+
     return (
         <PageBase selected="披风管理" admin={true}>
-            <Stack flexWrap="wrap" useFlexGap marginBottom={0.5} direction="row" spacing={2}>
+            <Stack alignItems="center" flexWrap="wrap" useFlexGap marginBottom={0.5} direction="row" spacing={2}>
                 <Button color="success" onClick={() => setCape({
                     open: true,
                     cape: "",
@@ -206,6 +274,8 @@ export default function CapeManage() {
                     uuid: ""
                 })} startDecorator={<Add />}>新建披风</Button>
                 <Button onClick={() => pageChange(0)} color="neutral" startDecorator={<Refresh />}>刷新数据</Button>
+                <Button onClick={() => setFindUser(true)} color="primary" startDecorator={<FindInPage />}>查询角色拥有的披风</Button>
+                {looking !== "" ? <Typography level="body-sm">你正在查看 {looking} 的披风列表</Typography> : null}
             </Stack>
             <Grid container justifyContent="space-evenly" spacing={2}>
                 {
@@ -216,25 +286,33 @@ export default function CapeManage() {
                                     <Typography level="title-lg">{cape.name}<br /><Typography level="body-xs">{cape.uuid}</Typography></Typography>
                                     <Divider inset="none" />
                                     <Stack alignItems="center" justifyContent="space-evenly" direction="row" spacing={1.5}>
-                                        {
-                                            cape.url === "" ? <Typography color="danger">未指定!!!!</Typography> : <img style={{ imageRendering: "pixelated", objectFit: "contain", width: "30%" }} alt="cape" src={window.location.href.replace("#/capeManage", "textures/" + cape.url)} />
-                                        }
+                                        <img style={{ imageRendering: "pixelated", objectFit: "contain", width: "30%" }} alt="cape" src={window.location.href.replace("#/capeManage", "textures/" + cape.uuid)} />
                                         <Divider orientation="vertical" />
                                         <Stack spacing={1.5}>
                                             <Typography>皮肤类型：<Typography variant="soft" color="primary"><b>{getType(cape.type) + "披风"}</b></Typography></Typography>
                                             <Typography>创建时间：<Typography variant="soft" color="primary"><b>{new Date(Number.parseInt(cape.createTime)).toLocaleString()}</b></Typography></Typography>
                                             <Typography>更改时间：<Typography variant="soft" color="primary"><b>{new Date(Number.parseInt(cape.editTime)).toLocaleString()}</b></Typography></Typography>
-                                            <Stack direction="row" spacing={0.5}>
-                                                <Button onClick={() => setCape({
-                                                    open: true,
-                                                    cape: window.location.href.replace("#/capeManage", "textures/" + cape.url),
-                                                    src: "",
-                                                    edit: true,
-                                                    name: cape.name,
-                                                    type: cape.type,
-                                                    uuid: cape.uuid
-                                                })} startDecorator={<Edit />}>编辑</Button>
-                                                <Button onClick={() => delCape(cape.uuid)} startDecorator={<Remove />} color="danger">删除</Button>
+                                            <Stack direction="row" spacing={1}>
+                                                <Tooltip title="编辑">
+                                                    <IconButton size="sm" variant="solid" onClick={() => setCape({
+                                                        open: true,
+                                                        cape: window.location.href.replace("#/capeManage", "textures/" + cape.uuid),
+                                                        src: "",
+                                                        edit: true,
+                                                        name: cape.name,
+                                                        type: cape.type,
+                                                        uuid: cape.uuid
+                                                    })} color="primary"><Edit /></IconButton>
+                                                </Tooltip>
+                                                <Tooltip title="删除">
+                                                    <IconButton variant="solid" size="sm" onClick={() => setDelWarn(cape)} color="danger"><Remove /></IconButton>
+                                                </Tooltip>
+                                                <Tooltip title="发放">
+                                                    <IconButton variant="solid" size="sm" onClick={() => setSendCape(cape.uuid)} color="success"><Send /></IconButton>
+                                                </Tooltip>
+                                                <Tooltip title="收回">
+                                                    <IconButton variant="solid" size="sm" onClick={() => setBackCape(cape.uuid)} color="neutral"><BackHand /></IconButton>
+                                                </Tooltip>
                                             </Stack>
                                         </Stack>
                                     </Stack>
@@ -326,9 +404,9 @@ export default function CapeManage() {
                                         <VisuallyHiddenInput onChange={capeChange} name="cape" type="file" />
                                     </Button>
                                     {
-                                        cape.cape === "" ? 
-                                        <img alt="cape" src={cape.cape} style={{ display: "none", imageRendering: "pixelated" }} width="100vw" height="100vh" id="cape_show" /> :
-                                        <img alt="cape" src={cape.cape} style={{ imageRendering: "pixelated" }} width="100vw" height="100vh" id="cape_show" />
+                                        cape.cape === "" ?
+                                            <img alt="cape" src={cape.cape} style={{ display: "none", imageRendering: "pixelated" }} width="100vw" height="100vh" id="cape_show" /> :
+                                            <img alt="cape" src={cape.cape} style={{ imageRendering: "pixelated" }} width="100vw" height="100vh" id="cape_show" />
                                     }
                                 </Stack>
                             </FormControl>
@@ -337,6 +415,91 @@ export default function CapeManage() {
                             </Button>
                         </Stack>
                     </form>
+                </ModalDialog>
+            </Modal>
+            <Modal
+                open={sendCape !== ""}
+                onClose={() => setSendCape("")}
+            >
+                <ModalDialog layout="center">
+                    <ModalClose />
+                    <DialogTitle>发放所选披风</DialogTitle>
+                    <form onSubmit={sendCapeF}>
+                        <Stack spacing={1.5}>
+                            <FormControl required>
+                                <FormLabel>被发放角色唯一识别码</FormLabel>
+                                <Input name="uuid" />
+                                <FormHelperText>可在 统一通行证-游戏角色-唯一识别码 处复制</FormHelperText>
+                            </FormControl>
+                            <Button type="submit" variant="solid" color="primary">
+                                发放披风
+                            </Button>
+                        </Stack>
+                    </form>
+                </ModalDialog>
+            </Modal>
+            <Modal
+                open={backCape !== ""}
+                onClose={() => setBackCape("")}
+            >
+                <ModalDialog layout="center">
+                    <ModalClose />
+                    <DialogTitle>收回所选披风</DialogTitle>
+                    <form onSubmit={backCapeF}>
+                        <Stack spacing={1.5}>
+                            <FormControl required>
+                                <FormLabel>被收回角色唯一识别码</FormLabel>
+                                <Input name="uuid" />
+                                <FormHelperText>可在 统一通行证-游戏角色-唯一识别码 处复制</FormHelperText>
+                            </FormControl>
+                            <Button type="submit" variant="solid" color="primary">
+                                收回披风
+                            </Button>
+                        </Stack>
+                    </form>
+                </ModalDialog>
+            </Modal>
+            <Modal
+                open={findUser}
+                onClose={() => setFindUser(false)}
+            >
+                <ModalDialog layout="center">
+                    <ModalClose />
+                    <DialogTitle>查询角色拥有的披风</DialogTitle>
+                    <form onSubmit={findUserF}>
+                        <Stack spacing={1.5}>
+                            <FormControl required>
+                                <FormLabel>查询角色唯一识别码</FormLabel>
+                                <Input name="uuid" />
+                                <FormHelperText>可在 统一通行证-游戏角色-唯一识别码 处复制</FormHelperText>
+                            </FormControl>
+                            <Button type="submit" variant="solid" color="primary">
+                                查询披风
+                            </Button>
+                        </Stack>
+                    </form>
+                </ModalDialog>
+            </Modal>
+            <Modal
+                open={delWarn !== ""}
+                onClose={() => setDelWarn("")}
+            >
+                <ModalDialog layout="center">
+                    <ModalClose />
+                    <DialogTitle>你确定要删除这个披风吗</DialogTitle>
+                    <Typography>
+                        警告! 此操作 <b>无法撤销</b> ! 一旦删除披风, 拥有此披风的角色会被 <b>收回披风</b> , 错误的删除披风可能会造成 <b>很多麻烦</b> ! 请 <b>核对</b> 被删除披风信息!<br/><br/>
+
+                        <Typography level="body-lg">
+                            披风 UUID: <b>{delWarn.uuid}</b><br/>
+                            披风名称: <b>{delWarn.name}</b><br/>
+                            披风类型: <b>{getType(delWarn.type)}披风</b>
+                        </Typography>
+                    </Typography>
+                    <img alt="cape" src={window.location.href.replace("#/capeManage", "textures/" + delWarn.uuid)} style={{ imageRendering: "pixelated" }} width="100vw" height="100vh" />
+                    <Button onClick={() => delCape(delWarn.uuid)} variant="solid" color="danger">
+                        确定删除
+                    </Button>
                 </ModalDialog>
             </Modal>
         </PageBase>

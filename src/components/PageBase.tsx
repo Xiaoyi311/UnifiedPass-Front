@@ -94,7 +94,7 @@ export default function PageBase(props: any) {
                 alignItems: { xs: 'start', sm: 'center' },
                 flexWrap: 'wrap',
                 justifyContent: 'space-between',
-                marginBottom: "20px"
+                marginBottom: "15px"
               }}
             >
               <Typography level="h2" component="h1">
