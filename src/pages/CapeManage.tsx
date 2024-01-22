@@ -497,7 +497,10 @@ export default function CapeManage() {
                         </Typography>
                     </Typography>
                     <img alt="cape" src={window.location.href.replace("#/capeManage", "textures/" + delWarn.uuid)} style={{ imageRendering: "pixelated" }} width="100vw" height="100vh" />
-                    <Button onClick={() => delCape(delWarn.uuid)} variant="solid" color="danger">
+                    <Button onClick={() => {
+                        delCape(delWarn.uuid);
+                        setDelWarn("");
+                    }} variant="solid" color="danger">
                         确定删除
                     </Button>
                 </ModalDialog>

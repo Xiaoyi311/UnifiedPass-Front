@@ -135,7 +135,7 @@ export default function GameProfile() {
             body: JSON.stringify({
                 username: profile.username,
                 model: profile.model,
-                cape: profile.cape.length === 0 ? null : profile.cape[selCape].uuid
+                cape: profile.cape[selCape].name === "无披风" ? "NONE" : profile.cape[selCape].uuid
             }),
             headers: {
                 "Content-Type": "application/json"
@@ -193,8 +193,6 @@ export default function GameProfile() {
                                     <FormLabel>游戏披风</FormLabel>
                                     <Select value={selCape} onChange={(e: any, value: any) => setSelCape(value)} startDecorator={<Flag />} name="cape">
                                         {
-                                            profile.cape.length === 0 ?
-                                            <Option value={0}>无披风</Option> :
                                             profile.cape.map((cape, index) => {
                                                 return(
                                                     <Option value={index}>{cape.name}</Option>
@@ -204,12 +202,13 @@ export default function GameProfile() {
                                     </Select>
                                 </FormControl>
                                 <FormControl sx={{ gridColumn: '1/-1' }} required>
-                                    <FormLabel>游戏皮肤</FormLabel>
+                                    <FormLabel>游戏皮肤&披风</FormLabel>
                                     <Stack
                                         marginTop={2}
                                         direction="row"
                                         alignItems="flex-start"
                                         justifyContent="space-evenly"
+                                        flexWrap="wrap"
                                     >
                                         <Stack
                                             spacing={2}
@@ -233,7 +232,8 @@ export default function GameProfile() {
                                             </RadioGroup>
                                             <Button
                                                 sx={{
-                                                    minWidth: "120px"
+                                                    minWidth: "120px",
+                                                    marginBottom: "10px !important"
                                                 }}
                                                 component="label"
                                                 role={undefined}
@@ -246,8 +246,12 @@ export default function GameProfile() {
                                                 <VisuallyHiddenInput name="skin" onChange={skinChange} type="file" />
                                             </Button>
                                         </Stack>
-                                        <img alt="skin" src={profile.skin} style={{ display: "none", imageRendering: "pixelated" }} width="100vw" height="100vh" id="skin_show" />
-                                        <img alt="cape" src={window.location.href.replace("#/capeManage", "textures/" + profile.cape[selCape].uuid)} style={{ display: "none", imageRendering: "pixelated" }} width="100vw" height="100vh" id="cape_show" />
+                                        <img alt="skin" src={profile.skin} style={{ display: "none", imageRendering: "pixelated", marginBottom: "10px" }} width="100vw" height="100vh" id="skin_show" />
+                                        {
+                                            profile.cape[selCape] === undefined || profile.cape[selCape].name === "无披风" ?
+                                            null :
+                                            <img alt="cape" src={window.location.href.replace("#/gameProfile", "textures/" + profile.cape[selCape].uuid)} style={{ imageRendering: "pixelated", marginBottom: "10px" }} width="100vw" height="100vh" id="cape_show" />
+                                        }
                                     </Stack>
                                     <FormHelperText>如果右侧图片长时间未更新请检查浏览器缓存</FormHelperText>
                                 </FormControl>
