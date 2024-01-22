@@ -283,18 +283,22 @@ export default function CapeManage() {
                         return (
                             <Grid sm={6} xs={12} md={6}>
                                 <Card>
-                                    <Typography level="title-lg">{cape.name}<br /><Typography level="body-xs">{cape.uuid}</Typography></Typography>
+                                    <Typography level="title-lg">{cape.name}<br /><Typography level="body-xs">{cape.name !== "无披风" ? cape.uuid : "不定义"}</Typography></Typography>
                                     <Divider inset="none" />
                                     <Stack alignItems="center" justifyContent="space-evenly" direction="row" spacing={1.5}>
-                                        <img style={{ imageRendering: "pixelated", objectFit: "contain", width: "30%" }} alt="cape" src={window.location.href.replace("#/capeManage", "textures/" + cape.uuid)} />
+                                        {
+                                            cape.name !== "无披风" ?
+                                            <img style={{ imageRendering: "pixelated", objectFit: "contain", width: "30%" }} alt="cape" src={window.location.href.replace("#/capeManage", "textures/" + cape.uuid)} /> :
+                                            <Typography color="warning">不使用披风</Typography>
+                                        }
                                         <Divider orientation="vertical" />
                                         <Stack spacing={1.5}>
-                                            <Typography>皮肤类型：<Typography variant="soft" color="primary"><b>{getType(cape.type) + "披风"}</b></Typography></Typography>
-                                            <Typography>创建时间：<Typography variant="soft" color="primary"><b>{new Date(Number.parseInt(cape.createTime)).toLocaleString()}</b></Typography></Typography>
-                                            <Typography>更改时间：<Typography variant="soft" color="primary"><b>{new Date(Number.parseInt(cape.editTime)).toLocaleString()}</b></Typography></Typography>
+                                            <Typography>皮肤类型：<Typography variant="soft" color="primary"><b>{cape.name !== "无披风" ? getType(cape.type) + "披风" : "不定义"}</b></Typography></Typography>
+                                            <Typography>创建时间：<Typography variant="soft" color="primary"><b>{cape.name !== "无披风" ? new Date(Number.parseInt(cape.createTime)).toLocaleString() : "不定义"}</b></Typography></Typography>
+                                            <Typography>更改时间：<Typography variant="soft" color="primary"><b>{cape.name !== "无披风" ? new Date(Number.parseInt(cape.editTime)).toLocaleString() : "不定义"}</b></Typography></Typography>
                                             <Stack direction="row" spacing={1}>
                                                 <Tooltip title="编辑">
-                                                    <IconButton size="sm" variant="solid" onClick={() => setCape({
+                                                    <IconButton disabled={cape.name === "无披风"} size="sm" variant="solid" onClick={() => setCape({
                                                         open: true,
                                                         cape: window.location.href.replace("#/capeManage", "textures/" + cape.uuid),
                                                         src: "",
@@ -305,13 +309,13 @@ export default function CapeManage() {
                                                     })} color="primary"><Edit /></IconButton>
                                                 </Tooltip>
                                                 <Tooltip title="删除">
-                                                    <IconButton variant="solid" size="sm" onClick={() => setDelWarn(cape)} color="danger"><Remove /></IconButton>
+                                                    <IconButton disabled={cape.name === "无披风"} variant="solid" size="sm" onClick={() => setDelWarn(cape)} color="danger"><Remove /></IconButton>
                                                 </Tooltip>
                                                 <Tooltip title="发放">
-                                                    <IconButton variant="solid" size="sm" onClick={() => setSendCape(cape.uuid)} color="success"><Send /></IconButton>
+                                                    <IconButton disabled={cape.name === "无披风"} variant="solid" size="sm" onClick={() => setSendCape(cape.uuid)} color="success"><Send /></IconButton>
                                                 </Tooltip>
                                                 <Tooltip title="收回">
-                                                    <IconButton variant="solid" size="sm" onClick={() => setBackCape(cape.uuid)} color="neutral"><BackHand /></IconButton>
+                                                    <IconButton disabled={cape.name === "无披风"} variant="solid" size="sm" onClick={() => setBackCape(cape.uuid)} color="neutral"><BackHand /></IconButton>
                                                 </Tooltip>
                                             </Stack>
                                         </Stack>
