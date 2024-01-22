@@ -219,7 +219,7 @@ export default function CapeManage() {
 
         const r = await fetch("/api/profile/backCape", {
             body: JSON.stringify({
-                cape: sendCape,
+                cape: backCape,
                 user: e.currentTarget.elements.uuid.value
             }),
             headers: {
@@ -235,7 +235,7 @@ export default function CapeManage() {
             alert("收回成功!");
         }
 
-        setSendCape("");
+        setBackCape("");
     }
 
     async function findUserF(e: any) {
@@ -253,7 +253,7 @@ export default function CapeManage() {
         if (typeof (data.data) !== "object") {
             alert("查询失败! 请检查唯一识别码是否有误!");
         } else {
-            setLooking("角色 " + uuid);
+            setLooking("角色 " + uuid + " 的披风列表, 第一个显示的披风为正在使用的披风");
             setCapes(data.data);
             alert("查询成功! 点击上方刷新数据恢复显示!");
         }
@@ -275,7 +275,7 @@ export default function CapeManage() {
                 })} startDecorator={<Add />}>新建披风</Button>
                 <Button onClick={() => pageChange(0)} color="neutral" startDecorator={<Refresh />}>刷新数据</Button>
                 <Button onClick={() => setFindUser(true)} color="primary" startDecorator={<FindInPage />}>查询角色拥有的披风</Button>
-                {looking !== "" ? <Typography level="body-sm">你正在查看 {looking} 的披风列表</Typography> : null}
+                {looking !== "" ? <Typography level="body-sm">你正在查看 {looking}</Typography> : null}
             </Stack>
             <Grid container justifyContent="space-evenly" spacing={2}>
                 {
@@ -364,17 +364,17 @@ export default function CapeManage() {
                             </FormControl>
                             <FormControl required>
                                 <FormLabel>披风类型</FormLabel>
-                                <Select value={cape.type} onChange={(e: any) => {
+                                <Select value={cape.type} onChange={(e: any, value: any) => 
                                     setCape({
                                         open: true,
                                         name: cape.name,
-                                        type: e.value,
+                                        type: value,
                                         cape: cape.cape,
                                         src: cape.src,
                                         edit: cape.edit,
                                         uuid: cape.uuid
                                     })
-                                }} name="type">
+                                } name="type">
                                     <Option value="ACTIVITY">活动披风</Option>
                                     <Option value="PERMISSION">权限披风</Option>
                                     <Option value="REWARD">补偿披风</Option>

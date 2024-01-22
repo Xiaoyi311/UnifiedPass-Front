@@ -16,12 +16,13 @@ export default function GameProfile() {
   width: 1px;
 `;
 
+    const [selCape, setSelCape] = useState(0);
     const [profile, setProfile] = useState({
         username: "",
         uuid: "",
         model: "",
         skin: "",
-        cape: "",
+        cape: [] as any[],
         skin_src: new File([], "un")
     });
 
@@ -35,23 +36,37 @@ export default function GameProfile() {
                             data.text().then((text) => {
                                 const json = JSON.parse(text);
                                 const texture = JSON.parse(atob(json.properties[0].value))
-                                setProfile({
-                                    username: json.name,
-                                    uuid: json.id,
-                                    model: texture.textures.SKIN === undefined ? "default" : texture.textures.SKIN.metadata.model,
-                                    skin: texture.textures.SKIN === undefined ? "" : texture.textures.SKIN.url,
-                                    skin_src: profile.skin_src,
-                                    cape: texture.textures.CAPE === undefined ? "" : texture.textures.CAPE.url
+
+                                fetch("/api/profile/getUserCapes", {
+                                    headers: {
+                                        "Content-Type": "application/json"
+                                    },
+                                    method: "GET"
+                                }).then((data) => {
+                                    data.text().then((text) => {
+                                        const data = JSON.parse(text);
+                                        if (typeof (data.data) === "object") {
+                                            setProfile({
+                                                username: json.name,
+                                                uuid: json.id,
+                                                model: texture.textures.SKIN === undefined ? "default" : texture.textures.SKIN.metadata.model,
+                                                skin: texture.textures.SKIN === undefined ? "" : texture.textures.SKIN.url,
+                                                skin_src: profile.skin_src,
+                                                cape: data.data
+                                            })
+
+                                            const show = document.getElementById("skin_show");
+                                            if (texture.textures.SKIN !== undefined && show != null) {
+                                                show.style.display = "block";
+                                            }
+                                        }
+                                    })
                                 })
-                                const show = document.getElementById("skin_show");
-                                if (texture.textures.SKIN !== undefined && show != null) {
-                                    show.style.display = "block";
-                                }
                             })
                         })
                     }
                 })
-            })
+            });
         }
     })
 
@@ -115,10 +130,12 @@ export default function GameProfile() {
             }
         }
 
+        console.log(selCape)
         const r2 = await fetch("/api/profile/setInfo", {
             body: JSON.stringify({
                 username: profile.username,
-                model: profile.model
+                model: profile.model,
+                cape: profile.cape.length === 0 ? null : profile.cape[selCape].uuid
             }),
             headers: {
                 "Content-Type": "application/json"
@@ -174,8 +191,16 @@ export default function GameProfile() {
                                 </FormControl>
                                 <FormControl sx={{ gridColumn: '1/-1' }} required>
                                     <FormLabel>游戏披风</FormLabel>
-                                    <Select defaultValue={0} startDecorator={<Flag/>} name="cape">
-                                        <Option value={0}>无披风</Option>
+                                    <Select value={selCape} onChange={(e: any, value: any) => setSelCape(value)} startDecorator={<Flag />} name="cape">
+                                        {
+                                            profile.cape.length === 0 ?
+                                            <Option value={0}>无披风</Option> :
+                                            profile.cape.map((cape, index) => {
+                                                return(
+                                                    <Option value={index}>{cape.name}</Option>
+                                                )
+                                            })
+                                        }
                                     </Select>
                                 </FormControl>
                                 <FormControl sx={{ gridColumn: '1/-1' }} required>
@@ -222,7 +247,7 @@ export default function GameProfile() {
                                             </Button>
                                         </Stack>
                                         <img alt="skin" src={profile.skin} style={{ display: "none", imageRendering: "pixelated" }} width="100vw" height="100vh" id="skin_show" />
-                                        <img alt="cape" src={profile.cape} style={{ display: "none", imageRendering: "pixelated" }} width="100vw" height="100vh" id="cape_show" />
+                                        <img alt="cape" src={window.location.href.replace("#/capeManage", "textures/" + profile.cape[selCape].uuid)} style={{ display: "none", imageRendering: "pixelated" }} width="100vw" height="100vh" id="cape_show" />
                                     </Stack>
                                     <FormHelperText>如果右侧图片长时间未更新请检查浏览器缓存</FormHelperText>
                                 </FormControl>
