@@ -9,15 +9,16 @@ import About from './pages/About';
 import Setting from './pages/Setting';
 import GameProfile from './pages/GameProfile';
 import CapeManage from './pages/CapeManage';
+import { GoogleReCaptchaProvider } from 'react-google-recaptcha-v3';
 
 const router = createHashRouter([
   {
     path: "*",
-    element: <NotFound/>
+    element: <NotFound />
   },
   {
     path: '/',
-    element: <Root/>
+    element: <Root />
   },
   {
     path: '/login',
@@ -29,19 +30,19 @@ const router = createHashRouter([
   },
   {
     path: '/overview',
-    element: <OverView/>
+    element: <OverView />
   },
   {
     path: '/setting',
-    element: <Setting/>
+    element: <Setting />
   },
   {
     path: '/gameProfile',
-    element: <GameProfile/>
+    element: <GameProfile />
   },
   {
     path: '/capeManage',
-    element: <CapeManage/>
+    element: <CapeManage />
   }
 ]);
 
@@ -50,6 +51,11 @@ const root = ReactDOM.createRoot(
 );
 root.render(
   <React.StrictMode>
-    <RouterProvider router={router}/>
+    <GoogleReCaptchaProvider
+      reCaptchaKey='6Lc7slgpAAAAAHJi6fjVajeS-yidHieeZ3k3MPrO'
+      useRecaptchaNet={true}
+      >
+      <RouterProvider router={router} />
+    </GoogleReCaptchaProvider>
   </React.StrictMode>
 );

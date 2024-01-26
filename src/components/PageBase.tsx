@@ -4,8 +4,10 @@ import Header from "./Header";
 import Sidebar from "./Sidebar";
 import { Home, NavigateNext } from "@mui/icons-material";
 import NoPermission from "../pages/NoPermission";
+import { useNavigate } from "react-router-dom";
 
 export default function PageBase(props: any) {
+  const nav = useNavigate();
   const [allow, setAllow] = useState(true);
   const [user, setUser] = useState<{
     username: any,
@@ -29,6 +31,8 @@ export default function PageBase(props: any) {
             if (props.admin && !json.data.admin) {
               setAllow(false)
             }
+          }else if(json.status === 403){
+            nav("/login")
           }
         })
       })

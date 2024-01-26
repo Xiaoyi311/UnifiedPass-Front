@@ -17,11 +17,13 @@ import DarkModeRoundedIcon from '@mui/icons-material/DarkModeRounded';
 import LightModeRoundedIcon from '@mui/icons-material/LightModeRounded';
 import { useNavigate } from 'react-router-dom';
 import { FormHelperText } from '@mui/joy';
+import { useCallback } from 'react';
+import { GoogleReCaptcha } from 'react-google-recaptcha-v3';
+import { Check, Microsoft } from '@mui/icons-material';
 
 interface FormElements extends HTMLFormControlsCollection {
   username: HTMLInputElement;
   password: HTMLInputElement;
-  code: HTMLInputElement;
   persistent: HTMLInputElement;
 }
 interface SignInFormElement extends HTMLFormElement {
@@ -61,11 +63,99 @@ function ColorSchemeToggle(props: IconButtonProps) {
 }
 
 export default function Login() {
+  let timer: any;
+  let code = "";
+  const [miCode, setMiCode] = React.useState("");
+  const [miAccess, setMiAccess] = React.useState("");
   const [loading, setLoading] = React.useState(false);
+  const [miAccessStatus, setMiAccessStatus] = React.useState(0);
   const nav = useNavigate();
+  const [token, setToken] = React.useState("");
+  const [refreshReCaptcha, setRefreshReCaptcha] = React.useState(false);
+
+  const onVerify = useCallback((token: string) => {
+    setToken(token);
+  }, [setToken]);
+
+  async function checkCode() {
+    const data: any = JSON.parse(await (await fetch("/api/auth/miOauthStatus?code=" + code, {
+      method: "GET",
+    })).text());
+
+    if (data.status === 403) {
+      alert("人机验证失败, 请检查您的网络环境, 或者刷新页面重试!");
+    } else if (data.status === 200) {
+      switch (data.data) {
+        case "VERIFYING":
+          return;
+        case "CANCEL":
+          alert("客户端已拒绝授权!");
+          setMiCode("");
+          setMiAccessStatus(0);
+          break;
+        case "ERROR":
+          alert("微软服务器返回错误!");
+          setMiCode("");
+          setMiAccessStatus(0);
+          break;
+        case "OUTDATED":
+          alert("代码已过期! 请重新生成!");
+          setMiCode("");
+          setMiAccessStatus(0);
+          break;
+        case "REFUSE":
+          alert("请求权限出现错误!");
+          setMiCode("");
+          setMiAccessStatus(0);
+          break;
+        case "UNKNOWN":
+          alert("未知/过期的代码!");
+          setMiCode("");
+          setMiAccessStatus(0);
+          break;
+        default:
+          setMiCode("");
+          setMiAccessStatus(0);
+          setMiAccess(data.data);
+          break;
+      }
+      clearInterval(timer);
+    } else {
+      alert("服务器返回错误，无法授权!")
+      setMiAccessStatus(0);
+    }
+  }
+
+  async function miAccessF() {
+    setMiAccessStatus(1);
+
+    const data: any = JSON.parse(await (await fetch("/api/auth/miOauth", {
+      method: "GET",
+      headers: {
+        "Google_token": token
+      },
+    })).text());
+
+    if (data.status === 403) {
+      alert("人机验证失败, 请检查您的网络环境, 或者刷新页面重试!");
+    } else if (data.status === 200) {
+      setMiCode(data.data);
+      alert("授权请求发起成功，确定后自动开启新页面，你需要按照对应流程完成登录，并将以下代码输入新开启的页面：" + data.data);
+      window.open("https://login.live.com/oauth20_remoteconnect.srf", '_blank')
+      code = data.data;
+      setMiCode(code);
+      timer = setInterval(checkCode, 3000, [miCode]);
+    } else {
+      alert("服务器返回错误，无法授权!")
+      setMiAccessStatus(0);
+    }
+
+    setRefreshReCaptcha(r => !r);
+  }
 
   return (
     <CssVarsProvider defaultMode="dark" disableTransitionOnChange>
+      <GoogleReCaptcha action='LoginOrRegister' refreshReCaptcha={refreshReCaptcha} onVerify={onVerify} />
       <CssBaseline />
       <GlobalStyles
         styles={{
@@ -167,24 +257,27 @@ export default function Login() {
                 onSubmit={(event: React.FormEvent<SignInFormElement>) => {
                   event.preventDefault();
                   const formElements = event.currentTarget.elements;
-                  let code: number = Number.parseInt(formElements.code.value);
                   const data = {
                     username: formElements.username.value,
                     password: formElements.password.value,
-                    code: code,
-                    persistent: formElements.persistent.checked,
+                    mi_access: miAccess,
+                    persistent: formElements.persistent.checked
                   };
                   setLoading(true);
-                  if (!Number.isNaN(code)) {
+
+                  if (miAccess !== "") {
                     fetch("/api/auth/register", {
                       headers: {
-                        "Content-Type": "application/json"
+                        "Content-Type": "application/json",
+                        "Google_token": token
                       },
                       method: "POST",
                       body: JSON.stringify(data)
                     })
                       .then((response) => {
-                        if (response.status === 204) {
+                        if (response.status === 403) {
+                          alert("人机验证失败, 请检查您的网络环境, 或者刷新页面重试!");
+                        } else if (response.status === 204) {
                           alert("注册成功! 请刷新页面登录!");
                         } else if (response.status !== 200) {
                           alert("返回数据错误!");
@@ -194,16 +287,18 @@ export default function Login() {
                             if (data.data === "lang:user.exist") {
                               alert("用户名已存在!");
                             } else {
-                              alert("用户名或密码不合法，或授权码无效!");
+                              alert("用户名或密码不合法，或你未购买 MC 正版!");
                             }
                           })
                         }
+                        setRefreshReCaptcha(r => !r);
                         setLoading(false);
                       })
                   } else {
                     fetch("/api/auth/login", {
                       headers: {
-                        "Content-Type": "application/json"
+                        "Content-Type": "application/json",
+                        "Google_token": token
                       },
                       method: "POST",
                       body: JSON.stringify(data)
@@ -211,7 +306,9 @@ export default function Login() {
                       .then((response) => {
                         response.text().then((d) => {
                           const data = JSON.parse(d);
-                          if (data.status !== 200) {
+                          if (data.status === 403) {
+                            alert("人机验证失败, 请检查您的网络环境, 或者刷新页面重试!");
+                          } else if (data.status !== 200) {
                             alert("返回数据错误!");
                           } else {
                             if (data.data === "OK") {
@@ -220,6 +317,7 @@ export default function Login() {
                               alert("用户名或密码错误!");
                             }
                           }
+                          setRefreshReCaptcha(r => !r);
                           setLoading(false);
                         })
                       })
@@ -235,11 +333,28 @@ export default function Login() {
                   <Input type="password" name="password" />
                 </FormControl>
                 <FormControl>
-                  <FormLabel>授权码</FormLabel>
-                  <Input placeholder='留空为登录账号' type="number" name="code" />
-                  <FormHelperText>使用正版 MC 加入 auth.backroom.com.cn 服务器获取授权码</FormHelperText>
+                  <FormLabel>正版授权</FormLabel>
+                  {
+                    /*
+                    miAccess === "" ?
+                      <Button disabled={token === ""} loading={miAccessStatus === 1} onClick={miAccessF} color="success" startDecorator={<Microsoft />}>使用 Microsoft 登录</Button> :
+                      <Button color="success" startDecorator={<Check />}>授权成功</Button>
+                    */
+                  }
+                  <Typography level="body-xs">
+                    微软登陆正在向 Mojang 申请中，如需注册账号请 QQ 群内 @[技术] Xiaoyi311 处理<br/>
+                  </Typography>
+                  <FormHelperText>
+                    {
+                      /*
+                      miAccessStatus === 0 ?
+                        "由于 Minecraft EULA 的要求，以及避免小号的问题，我们需要验证你的 Minecraft 正版身份" :
+                        "您需要在新页面内输入的代码: " + miCode + " 正在等待微软服务器返回授权结果..."
+                      */
+                    }
+                  </FormHelperText>
                 </FormControl>
-                <Stack gap={4} sx={{ mt: 2 }}>
+                <Stack gap={2} sx={{ mt: 2 }}>
                   <Box
                     sx={{
                       display: 'flex',
@@ -248,13 +363,16 @@ export default function Login() {
                     }}
                   >
                     <Checkbox size="sm" label="记住我" name="persistent" />
-                    <Link level="title-sm" href="#replace-with-a-link">
+                    <Link level="title-sm">
                       忘记你的密码?
                     </Link>
                   </Box>
-                  <Button loading={loading} type="submit" id='submit' fullWidth>
-                    登录
-                  </Button>
+                  <Box>
+                    <Button disabled={token === ""} loading={loading} type="submit" id='submit' fullWidth>
+                      登录/注册
+                    </Button>
+                    <Typography marginTop={1} textAlign="center" level='body-xs'>请注意: 注册时由于会校验MC正版，时间会较长，请耐心等待</Typography>
+                  </Box>
                 </Stack>
               </form>
             </Stack>
