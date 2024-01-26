@@ -342,7 +342,7 @@ export default function Login() {
                     */
                   }
                   <Typography level="body-xs">
-                    微软登陆正在向 Mojang 申请中，如需注册账号请 QQ 群内 @[技术] Xiaoyi311 处理<br/>
+                    微软登陆正在向 Mojang 申请中，第一批通行证注册名额已满(30人)，如需注册请等待下一批开放<br/>
                   </Typography>
                   <FormHelperText>
                     {

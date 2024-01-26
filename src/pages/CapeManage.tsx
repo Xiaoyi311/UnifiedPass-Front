@@ -415,7 +415,7 @@ export default function CapeManage() {
                                 </Stack>
                             </FormControl>
                             <Button type="submit" variant="solid" color="primary">
-                                {cape.edit ? "编辑" : "添加"}皮肤
+                                {cape.edit ? "编辑" : "添加"}披风
                             </Button>
                         </Stack>
                     </form>
