@@ -10,6 +10,7 @@ import Setting from './pages/Setting';
 import GameProfile from './pages/GameProfile';
 import CapeManage from './pages/CapeManage';
 import { GoogleReCaptchaProvider } from 'react-google-recaptcha-v3';
+import zIndex from '@mui/material/styles/zIndex';
 
 const router = createHashRouter([
   {
@@ -54,7 +55,7 @@ root.render(
     <GoogleReCaptchaProvider
       reCaptchaKey='6Lc7slgpAAAAAHJi6fjVajeS-yidHieeZ3k3MPrO'
       useRecaptchaNet={true}
-      >
+    >
       <RouterProvider router={router} />
     </GoogleReCaptchaProvider>
   </React.StrictMode>

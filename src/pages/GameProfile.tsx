@@ -256,7 +256,7 @@ export default function GameProfile() {
                                     <FormHelperText>如果右侧图片长时间未更新请检查浏览器缓存</FormHelperText>
                                 </FormControl>
                                 <CardActions sx={{ gridColumn: '1/-1' }}>
-                                    <Button type="submit" variant="solid" color="primary">
+                                    <Button disabled={profile.uuid === ""} type="submit" variant="solid" color="primary">
                                         更新设置
                                     </Button>
                                 </CardActions>
