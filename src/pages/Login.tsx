@@ -19,12 +19,12 @@ import { useNavigate } from 'react-router-dom';
 import { FormHelperText } from '@mui/joy';
 import { useCallback } from 'react';
 import { GoogleReCaptcha } from 'react-google-recaptcha-v3';
-import { Check, Microsoft } from '@mui/icons-material';
 
 interface FormElements extends HTMLFormControlsCollection {
   username: HTMLInputElement;
   password: HTMLInputElement;
   persistent: HTMLInputElement;
+  code: HTMLInputElement;
 }
 interface SignInFormElement extends HTMLFormElement {
   readonly elements: FormElements;
@@ -260,12 +260,12 @@ export default function Login() {
                   const data = {
                     username: formElements.username.value,
                     password: formElements.password.value,
-                    mi_access: miAccess,
+                    code: formElements.code.value,
                     persistent: formElements.persistent.checked
                   };
                   setLoading(true);
 
-                  if (miAccess !== "") {
+                  if (data.code !== "") {
                     fetch("/api/auth/register", {
                       headers: {
                         "Content-Type": "application/json",
@@ -287,7 +287,7 @@ export default function Login() {
                             if (data.data === "lang:user.exist") {
                               alert("用户名已存在!");
                             } else {
-                              alert("用户名或密码不合法，或你未购买 MC 正版!");
+                              alert("用户名或密码不合法，或验证码失效!");
                             }
                           })
                         }
@@ -333,7 +333,7 @@ export default function Login() {
                   <Input type="password" name="password" />
                 </FormControl>
                 <FormControl>
-                  <FormLabel>正版授权</FormLabel>
+                  <FormLabel>正版验证</FormLabel>
                   {
                     /*
                     miAccess === "" ?
@@ -341,10 +341,10 @@ export default function Login() {
                       <Button color="success" startDecorator={<Check />}>授权成功</Button>
                     */
                   }
-                  <Typography level="body-xs">
-                    微软登陆正在向 Mojang 申请中，第一批通行证注册名额已满(30人)，如需注册请等待下一批开放<br/>
-                  </Typography>
+                  <Input type="number" name="code" placeholder='UVS 验证码'/>
                   <FormHelperText>
+                    根据 MC EULA 的要求,以及避免小号,需要验证你的 MC 正版<br/>
+                    你要用正版 1.20.4 进入服务器 pass.bkr.xiaoyi311.eu.org 获取 UVS 验证码并输入这里
                     {
                       /*
                       miAccessStatus === 0 ?
