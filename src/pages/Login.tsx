@@ -341,10 +341,9 @@ export default function Login() {
                       <Button color="success" startDecorator={<Check />}>授权成功</Button>
                     */
                   }
-                  <Input type="number" name="code" placeholder='UVS验证码,非注册不输入'/>
+                  <Input type="number" name="code" placeholder='UVS 验证码' />
                   <FormHelperText>
-                    根据 MC EULA 的要求, 我们需要验证你的 MC 正版, 登录请清空这里的输入!!!<br/>
-                    你要用正版 1.20.4 进入服务器 pass.bkr.xiaoyi311.eu.org 获取 UVS 验证码并输入这里
+                    根据 MC EULA 的要求, 我们需要验证你的 MC 正版，请用正版 1.20.4 进入服务器 pass.bkr.xiaoyi311.eu.org 获取 UVS 验证码并输入这里
                     {
                       /*
                       miAccessStatus === 0 ?
@@ -371,6 +370,7 @@ export default function Login() {
                     <Button disabled={token === ""} loading={loading} type="submit" id='submit' fullWidth>
                       登录/注册
                     </Button>
+                    <Typography marginTop={1} textAlign="center" level="body-sm">请注意: 登录请清空 UVS 验证码的内容!!!!</Typography>
                   </Box>
                 </Stack>
               </form>

@@ -1,6 +1,6 @@
-import { Button, Option, Card, CardActions, CardContent, DialogTitle, Divider, FormControl, FormHelperText, FormLabel, Grid, Input, Modal, ModalClose, ModalDialog, Radio, RadioGroup, Select, Stack, Typography, styled } from "@mui/joy";
+import { Button, Option, Card, CardActions, CardContent, DialogTitle, Divider, FormControl, FormHelperText, FormLabel, Grid, Input, Modal, ModalClose, ModalDialog, Radio, RadioGroup, Select, Stack, Typography, styled, LinearProgress } from "@mui/joy";
 import PageBase from "../components/PageBase";
-import { Add, BadgeOutlined, Edit, Flag, PermIdentity, Settings, UploadFile } from "@mui/icons-material";
+import { AccountBox, Add, BadgeOutlined, Build, Edit, Flag, Key, Message, PermIdentity, UploadFile } from "@mui/icons-material";
 import { useState } from "react";
 
 export default function UserManage() {
@@ -26,12 +26,20 @@ export default function UserManage() {
         cape: [] as any[],
         skin_src: new File([], "un")
     });
+    const [user, setUser] = useState({
+        uuid: "",
+        username: "",
+        password: "",
+        admin: false,
+        mojang: "",
+        registerTime: 0
+    });
 
-    async function newUvsCode(e: any){
+    async function newUvsCode(e: any) {
         e.preventDefault();
         const uuid: string = e.currentTarget.elements.uuid.value;
 
-        if(uuid.length !== 32){
+        if (uuid.length !== 32) {
             alert("格式不正确!");
             return;
         }
@@ -56,11 +64,11 @@ export default function UserManage() {
         setUvs(false);
     }
 
-    async function getPlayer(e: any){
+    async function getPlayer(e: any) {
         e.preventDefault();
         const uuid: string = e.currentTarget.elements.uuid.value;
 
-        if(uuid.length !== 32){
+        if (uuid.length !== 32) {
             alert("格式不正确!");
             return;
         }
@@ -72,7 +80,7 @@ export default function UserManage() {
             method: "GET"
         });
 
-        if(r.status === 204){
+        if (r.status === 204) {
             alert("用户不存在!");
             return;
         }
@@ -88,6 +96,14 @@ export default function UserManage() {
         });
         const capeData = JSON.parse(await r1.text());
 
+        const r2 = await fetch("/api/auth/info/profile/" + uuid, {
+            headers: {
+                "Content-Type": "application/json"
+            },
+            method: "GET"
+        });
+        const userData = JSON.parse(await r2.text()).data;
+
         alert("查询成功!");
 
         setProfile({
@@ -97,6 +113,14 @@ export default function UserManage() {
             skin: texture.textures.SKIN === undefined ? "" : texture.textures.SKIN.url,
             cape: capeData.data,
             skin_src: profile.skin_src
+        });
+        setUser({
+            uuid: userData.id,
+            username: userData.username,
+            password: "",
+            admin: userData.admin,
+            mojang: userData.mojang,
+            registerTime: userData.registerTime
         });
         setPlayer(false);
     }
@@ -180,7 +204,11 @@ export default function UserManage() {
         alert("更新成功! 如果用户名被更改, 则需要在启动器重新刷新令牌!");
     }
 
-    return(
+    async function updateUser(e: any) {
+        e.preventDefault();
+    }
+
+    return (
         <PageBase selected="用户管理" admin={true}>
             <Typography level="body-sm">
                 为了保护用户的信息安全，不支持在网页直接删除、新建用户数据，仅可以执行其他不伤害玩家数据的操作
@@ -199,7 +227,7 @@ export default function UserManage() {
                             overflow: 'auto'
                         }}
                     >
-                        <Typography level="title-lg" startDecorator={<Settings />}>
+                        <Typography level="title-lg" startDecorator={<Build />}>
                             角色信息
                         </Typography>
                         <Divider inset="none" />
@@ -231,7 +259,7 @@ export default function UserManage() {
                                     <Select value={selCape} onChange={(e: any, value: any) => setSelCape(value)} startDecorator={<Flag />} name="cape">
                                         {
                                             profile.cape.map((cape, index) => {
-                                                return(
+                                                return (
                                                     <Option value={index}>{cape.name}</Option>
                                                 )
                                             })
@@ -285,24 +313,113 @@ export default function UserManage() {
                                         </Stack>
                                         {
                                             profile.skin === "" ?
-                                            null :
-                                            <img alt="skin" src={profile.skin} style={{ imageRendering: "pixelated", marginBottom: "10px" }} width="100vw" height="100vh" id="skin_show" />
+                                                null :
+                                                <img alt="skin" src={profile.skin} style={{ imageRendering: "pixelated", marginBottom: "10px" }} width="100vw" height="100vh" id="skin_show" />
                                         }
                                         {
                                             profile.cape[selCape] === undefined || profile.cape[selCape].name === "无披风" ?
-                                            null :
-                                            <img alt="cape" src={window.location.href.replace("#/userManage", "textures/" + profile.cape[selCape].uuid)} style={{ imageRendering: "pixelated", marginBottom: "10px" }} width="100vw" height="100vh" id="cape_show" />
+                                                null :
+                                                <img alt="cape" src={window.location.href.replace("#/userManage", "textures/" + profile.cape[selCape].uuid)} style={{ imageRendering: "pixelated", marginBottom: "10px" }} width="100vw" height="100vh" id="cape_show" />
                                         }
                                     </Stack>
                                     <FormHelperText>如果右侧图片长时间未更新请检查浏览器缓存</FormHelperText>
                                 </FormControl>
                                 <CardActions sx={{ gridColumn: '1/-1' }}>
                                     <Button disabled={profile.uuid === ""} type="submit" variant="solid" color="primary">
-                                        更新设置
+                                        更新角色信息
                                     </Button>
                                 </CardActions>
                             </CardContent>
                         </form>
+                    </Card>
+                </Grid>
+                <Grid xs={12} sm={6} md={6}>
+                    <Card
+                        variant="outlined"
+                        sx={{
+                            mx: 'auto',
+                            overflow: 'auto'
+                        }}
+                    >
+                        <Typography level="title-lg" startDecorator={<AccountBox />}>
+                            用户信息
+                        </Typography>
+                        <Divider inset="none" />
+                        <form onSubmit={updateUser}>
+                            <CardContent
+                                sx={{
+                                    display: 'grid',
+                                    gridTemplateColumns: 'repeat(2, minmax(80px, 1fr))',
+                                    gap: 1.5,
+                                }}
+                            >
+                                <FormControl sx={{ gridColumn: '1/-1' }} required>
+                                    <FormLabel>用户名</FormLabel>
+                                    <Input name="username" endDecorator={<PermIdentity />} onChange={(e) => setUser({
+                                        uuid: user.uuid,
+                                        username: e.target.value,
+                                        password: user.password,
+                                        admin: user.admin,
+                                        mojang: user.mojang,
+                                        registerTime: user.registerTime
+                                    })} value={user.username} />
+                                </FormControl>
+                                <FormControl sx={{ gridColumn: '1/-1', '--hue': Math.min(user.password.length * 10, 120) }}>
+                                    <FormLabel>新密码</FormLabel>
+                                    <Input type="password" name="password_name" endDecorator={<Key />} onChange={(e) => setUser({
+                                        uuid: user.uuid,
+                                        username: user.username,
+                                        password: e.target.value,
+                                        admin: user.admin,
+                                        mojang: user.mojang,
+                                        registerTime: user.registerTime
+                                    })} value={user.password} />
+                                    <LinearProgress
+                                        determinate
+                                        size="sm"
+                                        value={Math.min((user.password.length * 100) / 12, 100)}
+                                        sx={{
+                                            marginTop: "5px",
+                                            bgcolor: 'background.level3',
+                                            color: 'hsl(var(--hue) 80% 40%)',
+                                        }}
+                                    />
+                                    <Typography
+                                        level="body-xs"
+                                        sx={{ alignSelf: 'flex-end', color: 'hsl(var(--hue) 80% 30%)' }}
+                                    >
+                                        {user.password.length < 3 && '太弱'}
+                                        {user.password.length >= 3 && user.password.length < 6 && '弱'}
+                                        {user.password.length >= 6 && user.password.length < 10 && '强'}
+                                        {user.password.length >= 10 && '很强'}
+                                    </Typography>
+                                </FormControl>
+                                <CardActions sx={{ gridColumn: '1/-1' }}>
+                                    <Button disabled={profile.uuid === ""} type="submit" variant="solid" color="primary">
+                                        更新用户信息
+                                    </Button>
+                                </CardActions>
+                            </CardContent>
+                        </form>
+                    </Card>
+                    <Card
+                        variant="outlined"
+                        sx={{
+                            mx: 'auto',
+                            overflow: 'auto',
+                            marginTop: '10px'
+                        }}
+                    >
+                        <Typography level="title-lg" startDecorator={<Message />}>
+                            用户只读信息
+                        </Typography>
+                        <Divider inset="none" />
+                        <Typography>
+                            <b>用户唯一识别码</b>: {user.uuid}<br/>
+                            <b>身份</b>: {user.admin ? "超级管理员" : "普通玩家"}<br/>
+                            <b>正版 UUID</b>: {user.mojang}<br/>
+                            <b>注册时间</b>: {new Date(user.registerTime).toLocaleString()}<br/>
+                        </Typography>
                     </Card>
                 </Grid>
             </Grid>
