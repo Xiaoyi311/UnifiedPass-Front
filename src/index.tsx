@@ -10,7 +10,7 @@ import Setting from './pages/Setting';
 import GameProfile from './pages/GameProfile';
 import CapeManage from './pages/CapeManage';
 import { GoogleReCaptchaProvider } from 'react-google-recaptcha-v3';
-import zIndex from '@mui/material/styles/zIndex';
+import UserManage from './pages/UserManage';
 
 const router = createHashRouter([
   {
@@ -44,6 +44,10 @@ const router = createHashRouter([
   {
     path: '/capeManage',
     element: <CapeManage />
+  },
+  {
+    path: '/userManage',
+    element: <UserManage />
   }
 ]);
 

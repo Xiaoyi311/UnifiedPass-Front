@@ -69,7 +69,8 @@ export default function OverView() {
                         <Divider inset="none" />
                         <Button
                             draggable
-                            onClick={() => {
+                            onClick={async () => {
+                                await navigator.clipboard.writeText("authlib-injector:yggdrasil-server:" + encodeURIComponent(window.location.href.replace("#/overview", "api/yggdrasil/")));
                                 setyggClick(true);
                                 setTimeout(() => setyggClick(false), 1000);
                             }}
