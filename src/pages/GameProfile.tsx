@@ -1,4 +1,4 @@
-import { Button, Card, CardActions, CardContent, Divider, FormControl, FormHelperText, FormLabel, Grid, Input, Option, Radio, RadioGroup, Select, Stack, Typography, styled } from "@mui/joy";
+import { Button, Card, CardActions, CardContent, Divider, FormControl, FormHelperText, FormLabel, Grid, Input, Link, Option, Radio, RadioGroup, Select, Stack, Typography, styled } from "@mui/joy";
 import PageBase from "../components/PageBase";
 import { AdsClick, BadgeOutlined, Flag, PermIdentity, PublicOutlined, Settings, UploadFile } from "@mui/icons-material";
 import { useEffect, useState } from "react";
@@ -279,7 +279,7 @@ export default function GameProfile() {
                         <Divider inset="none" />
                         <Typography lineHeight={2} level="body-md">
                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                            由于 Mojang 本身的 <b>限制</b> , 玩家在通行证中选择的披风在 <b>纯原版</b> 环境下并 <b>无法显示</b> , 为了能 <b>正常显示</b> 您与其他玩家的披风, 我们提供了 <b>Custom Skin Loader API</b> (CSL API) 用来与 Mod 搭配正常显示披风, 您可以在我们的 <a href="https://docs.qq.com/doc/DWnp2RFJXRVNJZGFE" target="blank">Mod 白名单</a> 中找到 <b>Custom Skin Loader</b> Mod, 使用教程如下:<br />
+                            由于 Mojang 本身的 <b>限制</b> , 玩家在通行证中选择的披风在 <b>纯原版</b> 环境下并 <b>无法显示</b> , 为了能 <b>正常显示</b> 您与其他玩家的披风, 我们提供了 <b>Custom Skin Loader API</b> (CSL API) 用来与 Mod 搭配正常显示披风, 您可以在我们的 <Link href="https://docs.qq.com/doc/DWnp2RFJXRVNJZGFE" target="blank">Mod 白名单</Link> 中找到 <b>Custom Skin Loader</b> Mod, 使用教程如下:<br />
                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                             1. 下载并安装 <b>Custom Skin Loader</b> Mod<br />
                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
@@ -295,7 +295,12 @@ export default function GameProfile() {
                         </Typography>
                         <Button
                             onClick={async () => {
-                                window.open(window.location.href.replace("#/gameProfile", "textures/ExtraList.json"), '_blank');
+                                const url = window.URL || window.webkitURL || window;
+                                const blob = new Blob(["{\"name\":\"BackroomsMC\",\"type\":\"CustomSkinAPI\",\"root\":\"http://nova.backroom.com.cn:32001/api/csl/\"}"]);
+                                const saveLink: any = document.createElementNS('http://www.w3.org/1999/xhtml', 'a');
+                                saveLink.href = url.createObjectURL(blob);
+                                saveLink.download = "ExtraList.json";
+                                saveLink.click();
 
                                 setCslClick(true);
                                 setTimeout(() => setCslClick(false), 2000);

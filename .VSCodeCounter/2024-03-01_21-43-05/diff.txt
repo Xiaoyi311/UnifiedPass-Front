@@ -1,0 +1,30 @@
+Date : 2024-03-01 21:43:05
+Directory : /Volumes/Xiaoyi311/Code Project/BackRoom/WebSite/unifiedPass/src
+Total : 5 files,  386 codes, 0 comments, 17 blanks, all 403 lines
+
+Languages
++----------------+------------+------------+------------+------------+------------+
+| language       | files      | code       | comment    | blank      | total      |
++----------------+------------+------------+------------+------------+------------+
+| TypeScript JSX |          5 |        386 |          0 |         17 |        403 |
++----------------+------------+------------+------------+------------+------------+
+
+Directories
++-----------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| path                                                                                    | files      | code       | comment    | blank      | total      |
++-----------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| .                                                                                       |          5 |        386 |          0 |         17 |        403 |
+| pages                                                                                   |          5 |        386 |          0 |         17 |        403 |
++-----------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+
+Files
++-----------------------------------------------------------------------------------------+----------------+------------+------------+------------+------------+
+| filename                                                                                | language       | code       | comment    | blank      | total      |
++-----------------------------------------------------------------------------------------+----------------+------------+------------+------------+------------+
+| /Volumes/Xiaoyi311/Code Project/BackRoom/WebSite/unifiedPass/src/pages/GameProfile.tsx  | TypeScript JSX |         42 |          0 |          1 |         43 |
+| /Volumes/Xiaoyi311/Code Project/BackRoom/WebSite/unifiedPass/src/pages/Login.tsx        | TypeScript JSX |          4 |          0 |          0 |          4 |
+| /Volumes/Xiaoyi311/Code Project/BackRoom/WebSite/unifiedPass/src/pages/OAuthManager.tsx | TypeScript JSX |        205 |          0 |         12 |        217 |
+| /Volumes/Xiaoyi311/Code Project/BackRoom/WebSite/unifiedPass/src/pages/OAuthReq.tsx     | TypeScript JSX |        136 |          0 |          4 |        140 |
+| /Volumes/Xiaoyi311/Code Project/BackRoom/WebSite/unifiedPass/src/pages/OverView.tsx     | TypeScript JSX |         -1 |          0 |          0 |         -1 |
+| Total                                                                                   |                |        386 |          0 |         17 |        403 |
++-----------------------------------------------------------------------------------------+----------------+------------+------------+------------+------------+
