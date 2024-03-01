@@ -113,9 +113,9 @@ export default function OverView() {
                             </Typography>
                             <Typography textAlign="center" fontSize={15} level="body-md">
                                 SmallGarfield(OP)<br />
-                                yang5250(OP)<br />
-                                Executor_rain(Staff)<br />
+                                yang3526(OP)<br />
                                 AzogMine(Staff)<br />
+                                gezi_leasing(Staff)<br />
                             </Typography>
                         </Stack>
                         <Typography level="body-xs">

@@ -1,6 +1,6 @@
 import { Button, Card, CardActions, CardContent, Divider, FormControl, FormHelperText, FormLabel, Grid, Input, Option, Radio, RadioGroup, Select, Stack, Typography, styled } from "@mui/joy";
 import PageBase from "../components/PageBase";
-import { BadgeOutlined, Flag, PermIdentity, Settings, UploadFile } from "@mui/icons-material";
+import { AdsClick, BadgeOutlined, Flag, PermIdentity, PublicOutlined, Settings, UploadFile } from "@mui/icons-material";
 import { useEffect, useState } from "react";
 
 export default function GameProfile() {
@@ -16,6 +16,7 @@ export default function GameProfile() {
   width: 1px;
 `;
 
+    const [cslClick, setCslClick] = useState(false);
     const [selCape, setSelCape] = useState(0);
     const [profile, setProfile] = useState({
         username: "",
@@ -194,7 +195,7 @@ export default function GameProfile() {
                                     <Select value={selCape} onChange={(e: any, value: any) => setSelCape(value)} startDecorator={<Flag />} name="cape">
                                         {
                                             profile.cape.map((cape, index) => {
-                                                return(
+                                                return (
                                                     <Option value={index}>{cape.name}</Option>
                                                 )
                                             })
@@ -249,8 +250,8 @@ export default function GameProfile() {
                                         <img alt="skin" src={profile.skin} style={{ display: "none", imageRendering: "pixelated", marginBottom: "10px" }} width="100vw" height="100vh" id="skin_show" />
                                         {
                                             profile.cape[selCape] === undefined || profile.cape[selCape].name === "无披风" ?
-                                            null :
-                                            <img alt="cape" src={window.location.href.replace("#/gameProfile", "textures/" + profile.cape[selCape].uuid)} style={{ imageRendering: "pixelated", marginBottom: "10px" }} width="100vw" height="100vh" id="cape_show" />
+                                                null :
+                                                <img alt="cape" src={window.location.href.replace("#/gameProfile", "textures/" + profile.cape[selCape].uuid)} style={{ imageRendering: "pixelated", marginBottom: "10px" }} width="100vw" height="100vh" id="cape_show" />
                                         }
                                     </Stack>
                                     <FormHelperText>如果右侧图片长时间未更新请检查浏览器缓存</FormHelperText>
@@ -262,6 +263,48 @@ export default function GameProfile() {
                                 </CardActions>
                             </CardContent>
                         </form>
+                    </Card>
+                </Grid>
+                <Grid xs={6}>
+                    <Card
+                        variant="outlined"
+                        sx={{
+                            mx: 'auto',
+                            overflow: 'auto'
+                        }}
+                    >
+                        <Typography level="title-lg" startDecorator={<PublicOutlined />}>
+                            Custom Skin Loader API
+                        </Typography>
+                        <Divider inset="none" />
+                        <Typography lineHeight={2} level="body-md">
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                            由于 Mojang 本身的 <b>限制</b> , 玩家在通行证中选择的披风在 <b>纯原版</b> 环境下并 <b>无法显示</b> , 为了能 <b>正常显示</b> 您与其他玩家的披风, 我们提供了 <b>Custom Skin Loader API</b> (CSL API) 用来与 Mod 搭配正常显示披风, 您可以在我们的 <a href="https://docs.qq.com/doc/DWnp2RFJXRVNJZGFE" target="blank">Mod 白名单</a> 中找到 <b>Custom Skin Loader</b> Mod, 使用教程如下:<br />
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                            1. 下载并安装 <b>Custom Skin Loader</b> Mod<br />
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                            2. 下载下面提供的 <b>ExtraList</b> 文件<br />
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                            3. 将下载的 <b>ExtraList</b> 文件放入 <Typography sx={{ wordBreak: "break-all" }} variant="soft" color="primary">.minecraft/CustomSkinLoader/ExtraList</Typography> 目录下<br />
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                            4. 重启游戏, 如果成功加载, ExtraList 会被 <b>自动删除</b>, 此时 BackroomsMC 便已被添加至 <b>Custom Skin Loader</b> 加载列表的顶部
+                        </Typography>
+                        <Typography marginBottom={2} level="body-xs">
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;    
+                            ExtraList 是 CustomSkinLoader 提供的快捷添加皮肤站功能. 不需要任何繁琐的配置修改, 只需要使用 ExtraList 文件便可以快速添加皮肤加载器!
+                        </Typography>
+                        <Button
+                            onClick={async () => {
+                                window.open(window.location.href.replace("#/gameProfile", "textures/ExtraList.json"), '_blank');
+
+                                setCslClick(true);
+                                setTimeout(() => setCslClick(false), 2000);
+                            }}
+                            disabled={cslClick}
+                            startDecorator={<AdsClick />}
+                        >
+                            {cslClick ? "正在下载 ExtraList..." : "点击此按钮下载 ExtraList 文件"}
+                        </Button>
                     </Card>
                 </Grid>
             </Grid>

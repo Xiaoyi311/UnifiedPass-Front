@@ -1,0 +1,48 @@
+Date : 2024-02-22 13:34:44
+Directory : /Volumes/Xiaoyi311/Code Project/BackRoom/WebSite/unifiedPass/src
+Total : 19 files,  2981 codes, 15 comments, 136 blanks, all 3132 lines
+
+Languages
++----------------+------------+------------+------------+------------+------------+
+| language       | files      | code       | comment    | blank      | total      |
++----------------+------------+------------+------------+------------+------------+
+| TypeScript JSX |         17 |      2,929 |         14 |        132 |      3,075 |
+| TypeScript     |          1 |         35 |          1 |          4 |         40 |
+| JavaScript     |          1 |         17 |          0 |          0 |         17 |
++----------------+------------+------------+------------+------------+------------+
+
+Directories
++---------------------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| path                                                                                              | files      | code       | comment    | blank      | total      |
++---------------------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| .                                                                                                 |         19 |      2,981 |         15 |        136 |      3,132 |
+| . (Files)                                                                                         |          3 |        126 |          1 |          7 |        134 |
+| components                                                                                        |          4 |        446 |          0 |         13 |        459 |
+| pages                                                                                             |         12 |      2,409 |         14 |        116 |      2,539 |
++---------------------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+
+Files
++---------------------------------------------------------------------------------------------------+----------------+------------+------------+------------+------------+
+| filename                                                                                          | language       | code       | comment    | blank      | total      |
++---------------------------------------------------------------------------------------------------+----------------+------------+------------+------------+------------+
+| /Volumes/Xiaoyi311/Code Project/BackRoom/WebSite/unifiedPass/src/components/ColorSchemeToggle.tsx | TypeScript JSX |         56 |          0 |          2 |         58 |
+| /Volumes/Xiaoyi311/Code Project/BackRoom/WebSite/unifiedPass/src/components/Header.tsx            | TypeScript JSX |         46 |          0 |          2 |         48 |
+| /Volumes/Xiaoyi311/Code Project/BackRoom/WebSite/unifiedPass/src/components/PageBase.tsx          | TypeScript JSX |        134 |          0 |          4 |        138 |
+| /Volumes/Xiaoyi311/Code Project/BackRoom/WebSite/unifiedPass/src/components/Sidebar.tsx           | TypeScript JSX |        210 |          0 |          5 |        215 |
+| /Volumes/Xiaoyi311/Code Project/BackRoom/WebSite/unifiedPass/src/index.tsx                        | TypeScript JSX |         74 |          0 |          3 |         77 |
+| /Volumes/Xiaoyi311/Code Project/BackRoom/WebSite/unifiedPass/src/pages/About.tsx                  | TypeScript JSX |        208 |          1 |          1 |        210 |
+| /Volumes/Xiaoyi311/Code Project/BackRoom/WebSite/unifiedPass/src/pages/CapeManage.tsx             | TypeScript JSX |        478 |          1 |         35 |        514 |
+| /Volumes/Xiaoyi311/Code Project/BackRoom/WebSite/unifiedPass/src/pages/GameProfile.tsx            | TypeScript JSX |        254 |          1 |         15 |        270 |
+| /Volumes/Xiaoyi311/Code Project/BackRoom/WebSite/unifiedPass/src/pages/Login.tsx                  | TypeScript JSX |        395 |         10 |         13 |        418 |
+| /Volumes/Xiaoyi311/Code Project/BackRoom/WebSite/unifiedPass/src/pages/NoPermission.tsx           | TypeScript JSX |         74 |          0 |          3 |         77 |
+| /Volumes/Xiaoyi311/Code Project/BackRoom/WebSite/unifiedPass/src/pages/NotFound.tsx               | TypeScript JSX |         74 |          0 |          3 |         77 |
+| /Volumes/Xiaoyi311/Code Project/BackRoom/WebSite/unifiedPass/src/pages/OAuthManager.tsx           | TypeScript JSX |         15 |          0 |          2 |         17 |
+| /Volumes/Xiaoyi311/Code Project/BackRoom/WebSite/unifiedPass/src/pages/OAuthReq.tsx               | TypeScript JSX |        131 |          0 |          5 |        136 |
+| /Volumes/Xiaoyi311/Code Project/BackRoom/WebSite/unifiedPass/src/pages/OverView.tsx               | TypeScript JSX |        131 |          0 |          2 |        133 |
+| /Volumes/Xiaoyi311/Code Project/BackRoom/WebSite/unifiedPass/src/pages/Root.tsx                   | TypeScript JSX |         88 |          0 |          3 |         91 |
+| /Volumes/Xiaoyi311/Code Project/BackRoom/WebSite/unifiedPass/src/pages/Setting.tsx                | TypeScript JSX |        120 |          0 |          6 |        126 |
+| /Volumes/Xiaoyi311/Code Project/BackRoom/WebSite/unifiedPass/src/pages/UserManage.tsx             | TypeScript JSX |        441 |          1 |         28 |        470 |
+| /Volumes/Xiaoyi311/Code Project/BackRoom/WebSite/unifiedPass/src/setupProxy.js                    | JavaScript     |         17 |          0 |          0 |         17 |
+| /Volumes/Xiaoyi311/Code Project/BackRoom/WebSite/unifiedPass/src/utils.ts                         | TypeScript     |         35 |          1 |          4 |         40 |
+| Total                                                                                             |                |      2,981 |         15 |        136 |      3,132 |
++---------------------------------------------------------------------------------------------------+----------------+------------+------------+------------+------------+

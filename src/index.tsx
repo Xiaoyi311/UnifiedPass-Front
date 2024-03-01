@@ -11,6 +11,8 @@ import GameProfile from './pages/GameProfile';
 import CapeManage from './pages/CapeManage';
 import { GoogleReCaptchaProvider } from 'react-google-recaptcha-v3';
 import UserManage from './pages/UserManage';
+import OAuthReq from './pages/OAuthReq';
+import OAuthManager from './pages/OAuthManager';
 
 const router = createHashRouter([
   {
@@ -48,6 +50,14 @@ const router = createHashRouter([
   {
     path: '/userManage',
     element: <UserManage />
+  },
+  {
+    path: '/oauthReq',
+    element: <OAuthReq />
+  },
+  {
+    path: '/oauthManager',
+    element: <OAuthManager />
   }
 ]);
 

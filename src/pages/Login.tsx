@@ -15,7 +15,7 @@ import Typography from '@mui/joy/Typography';
 import Stack from '@mui/joy/Stack';
 import DarkModeRoundedIcon from '@mui/icons-material/DarkModeRounded';
 import LightModeRoundedIcon from '@mui/icons-material/LightModeRounded';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import { FormHelperText } from '@mui/joy';
 import { useCallback } from 'react';
 import { GoogleReCaptcha } from 'react-google-recaptcha-v3';
@@ -72,6 +72,7 @@ export default function Login() {
   const nav = useNavigate();
   const [token, setToken] = React.useState("");
   const [refreshReCaptcha, setRefreshReCaptcha] = React.useState(false);
+  const [searchParams]= useSearchParams();
 
   const onVerify = useCallback((token: string) => {
     setToken(token);
@@ -312,7 +313,16 @@ export default function Login() {
                             alert("返回数据错误!");
                           } else {
                             if (data.data === "OK") {
-                              nav("/");
+                              const cb = searchParams.get("cb");
+                              if(cb !== null){
+                                nav("/" + decodeURIComponent(cb));
+                              }else{
+                                nav("/")
+                              }
+                            } else if (data.data === "lang:login.disable"){
+                              alert("很抱歉! 管理员已关闭登录系统!");
+                            } else if (data.data === "lang:login.not_whitelist"){
+                              alert("很抱歉! 管理员已启用登录白名单系统! 您不在白名单内!");
                             } else {
                               alert("用户名或密码错误!");
                             }
@@ -343,7 +353,7 @@ export default function Login() {
                   }
                   <Input type="number" name="code" placeholder='UVS 验证码' />
                   <FormHelperText>
-                    根据 MC EULA 的要求, 我们需要验证你的 MC 正版，请用正版 1.20.4 进入服务器 pass.bkr.xiaoyi311.eu.org 获取 UVS 验证码并输入这里
+                    根据 MC EULA 的要求, 我们需要验证你的 MC 正版，请用正版 1.20.4 进入服务器 nova.backroom.com.cn:32002 获取 UVS 验证码并输入这里
                     {
                       /*
                       miAccessStatus === 0 ?
