@@ -1,0 +1,21 @@
+"filename", "language", "TypeScript JSX", "JavaScript", "TypeScript", "comment", "blank", "total"
+"/Volumes/Xiaoyi311/Code Project/BackRoom/WebSite/unifiedPass/src/components/ColorSchemeToggle.tsx", "TypeScript JSX", 56, 0, 0, 0, 2, 58
+"/Volumes/Xiaoyi311/Code Project/BackRoom/WebSite/unifiedPass/src/components/Header.tsx", "TypeScript JSX", 46, 0, 0, 0, 2, 48
+"/Volumes/Xiaoyi311/Code Project/BackRoom/WebSite/unifiedPass/src/components/PageBase.tsx", "TypeScript JSX", 134, 0, 0, 0, 4, 138
+"/Volumes/Xiaoyi311/Code Project/BackRoom/WebSite/unifiedPass/src/components/Sidebar.tsx", "TypeScript JSX", 210, 0, 0, 0, 5, 215
+"/Volumes/Xiaoyi311/Code Project/BackRoom/WebSite/unifiedPass/src/index.tsx", "TypeScript JSX", 74, 0, 0, 0, 3, 77
+"/Volumes/Xiaoyi311/Code Project/BackRoom/WebSite/unifiedPass/src/pages/About.tsx", "TypeScript JSX", 208, 0, 0, 1, 1, 210
+"/Volumes/Xiaoyi311/Code Project/BackRoom/WebSite/unifiedPass/src/pages/CapeManage.tsx", "TypeScript JSX", 478, 0, 0, 1, 35, 514
+"/Volumes/Xiaoyi311/Code Project/BackRoom/WebSite/unifiedPass/src/pages/GameProfile.tsx", "TypeScript JSX", 301, 0, 0, 1, 16, 318
+"/Volumes/Xiaoyi311/Code Project/BackRoom/WebSite/unifiedPass/src/pages/Login.tsx", "TypeScript JSX", 399, 0, 0, 10, 13, 422
+"/Volumes/Xiaoyi311/Code Project/BackRoom/WebSite/unifiedPass/src/pages/NoPermission.tsx", "TypeScript JSX", 74, 0, 0, 0, 3, 77
+"/Volumes/Xiaoyi311/Code Project/BackRoom/WebSite/unifiedPass/src/pages/NotFound.tsx", "TypeScript JSX", 74, 0, 0, 0, 3, 77
+"/Volumes/Xiaoyi311/Code Project/BackRoom/WebSite/unifiedPass/src/pages/OAuthManager.tsx", "TypeScript JSX", 220, 0, 0, 0, 14, 234
+"/Volumes/Xiaoyi311/Code Project/BackRoom/WebSite/unifiedPass/src/pages/OAuthReq.tsx", "TypeScript JSX", 267, 0, 0, 0, 9, 276
+"/Volumes/Xiaoyi311/Code Project/BackRoom/WebSite/unifiedPass/src/pages/OverView.tsx", "TypeScript JSX", 130, 0, 0, 0, 2, 132
+"/Volumes/Xiaoyi311/Code Project/BackRoom/WebSite/unifiedPass/src/pages/Root.tsx", "TypeScript JSX", 88, 0, 0, 0, 3, 91
+"/Volumes/Xiaoyi311/Code Project/BackRoom/WebSite/unifiedPass/src/pages/Setting.tsx", "TypeScript JSX", 120, 0, 0, 0, 6, 126
+"/Volumes/Xiaoyi311/Code Project/BackRoom/WebSite/unifiedPass/src/pages/UserManage.tsx", "TypeScript JSX", 441, 0, 0, 1, 28, 470
+"/Volumes/Xiaoyi311/Code Project/BackRoom/WebSite/unifiedPass/src/setupProxy.js", "JavaScript", 0, 17, 0, 0, 0, 17
+"/Volumes/Xiaoyi311/Code Project/BackRoom/WebSite/unifiedPass/src/utils.ts", "TypeScript", 0, 0, 35, 1, 4, 40
+"Total", "-", 3320, 17, 35, 15, 153, 3540
